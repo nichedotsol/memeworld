@@ -1,7 +1,5 @@
 'use client'
 
-import Image from 'next/image'
-
 export default function Logo({ 
   className = '', 
   iconOnly = false 
@@ -9,38 +7,39 @@ export default function Logo({
   className?: string
   iconOnly?: boolean 
 }) {
-  // Logo file path - update this if your logo has a different name/format
-  // Supported: logo.png, logo.svg, logo.jpg, logo.webp
-  const logoSrc = '/logo.png'
+  // Logo file path
+  const logoSrc = '/Memeworld.png'
   
   if (iconOnly) {
-    // Just the icon for header
+    // Just the icon for header - using regular img for better transparency
     return (
-      <div className={className}>
-        <Image
-          src={logoSrc}
-          alt="Meme World Logo"
-          width={32}
-          height={32}
-          className="object-contain w-full h-full"
-          unoptimized
-        />
-      </div>
+      <img
+        src={logoSrc}
+        alt="Meme World Logo"
+        className={`${className} object-contain`}
+        style={{ 
+          backgroundColor: 'transparent',
+          display: 'block',
+          maxHeight: '40px',
+          width: 'auto',
+          height: 'auto'
+        }}
+      />
     )
   }
 
-  // Full logo
+  // Full logo - using regular img for better transparency
   return (
-    <div className={`relative inline-block ${className}`}>
-      <Image
-        src={logoSrc}
-        alt="Meme World"
-        width={200}
-        height={200}
-        className="object-contain w-full h-full"
-        priority
-        unoptimized
-      />
-    </div>
+    <img
+      src={logoSrc}
+      alt="Meme World"
+      className={`${className} object-contain`}
+      style={{ 
+        backgroundColor: 'transparent',
+        display: 'block',
+        maxWidth: '100%',
+        height: 'auto'
+      }}
+    />
   )
 }

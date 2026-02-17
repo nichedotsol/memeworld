@@ -15,3 +15,16 @@ body {
 .font-serif {
   font-family: Georgia, 'Times New Roman', serif;
 }
+
+/* Ensure PNG transparency is preserved */
+img {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+/* Remove any default backgrounds from Next.js Image components */
+img[src*=".png"],
+img[src*=".svg"] {
+  background: transparent !important;
+  background-color: transparent !important;
+}
