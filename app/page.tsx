@@ -1,15 +1,37 @@
+'use client'
+
+import { useState, useEffect } from 'react'
 import Hero from './components/Hero'
-import Portfolio from './components/Portfolio'
-import Team from './components/Team'
-import About from './components/About'
+import LoadingScreen from './components/LoadingScreen'
 
 export default function Home() {
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    // Check if user has already seen the loading screen
+    const hasSeenLoading = localStorage.getItem('memeworld-has-loaded')
+    
+    if (hasSeenLoading) {
+      // Skip loading screen on return visits
+      setIsLoading(false)
+    } else {
+      // First visit - show loading screen
+      const timer = setTimeout(() => {
+        localStorage.setItem('memeworld-has-loaded', 'true')
+      }, 2000)
+      return () => clearTimeout(timer)
+    }
+  }, [])
+
+  const handleLoadingComplete = () => {
+    setIsLoading(false)
+    localStorage.setItem('memeworld-has-loaded', 'true')
+  }
+
   return (
     <main>
-      <Hero />
-      <Portfolio />
-      <Team />
-      <About />
+      {isLoading && <LoadingScreen onComplete={handleLoadingComplete} />}
+      {!isLoading && <Hero />}
     </main>
   )
 }

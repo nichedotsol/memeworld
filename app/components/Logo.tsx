@@ -8,10 +8,10 @@ export default function Logo({
   iconOnly?: boolean 
 }) {
   // Logo file path
-  const logoSrc = '/Memeworld.png'
+  const logoSrc = '/Memeworld2.png'
   
   if (iconOnly) {
-    // Just the icon for header - using regular img for better transparency
+    // Logo for header - using regular img for better transparency, close to full size
     return (
       <img
         src={logoSrc}
@@ -20,9 +20,9 @@ export default function Logo({
         style={{ 
           backgroundColor: 'transparent',
           display: 'block',
-          maxHeight: '40px',
+          height: '120px',
           width: 'auto',
-          height: 'auto'
+          maxWidth: '300px'
         }}
       />
     )

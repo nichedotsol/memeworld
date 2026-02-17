@@ -1,8 +1,43 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
+import { useState, useRef } from 'react'
 
 export default function Hero() {
+  const [isHovered, setIsHovered] = useState(false)
+  const buttonRef = useRef<HTMLAnchorElement>(null)
+  
+  // Magnetic effect values
+  const x = useMotionValue(0)
+  const y = useMotionValue(0)
+  
+  const springConfig = { damping: 15, stiffness: 150 }
+  const xSpring = useSpring(x, springConfig)
+  const ySpring = useSpring(y, springConfig)
+  
+  const rotateX = useTransform(ySpring, [-0.5, 0.5], ['7.5deg', '-7.5deg'])
+  const rotateY = useTransform(xSpring, [-0.5, 0.5], ['-7.5deg', '7.5deg'])
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (!buttonRef.current) return
+    
+    const rect = buttonRef.current.getBoundingClientRect()
+    const centerX = rect.left + rect.width / 2
+    const centerY = rect.top + rect.height / 2
+    
+    const distanceX = (e.clientX - centerX) / rect.width
+    const distanceY = (e.clientY - centerY) / rect.height
+    
+    x.set(distanceX * 0.3)
+    y.set(distanceY * 0.3)
+  }
+
+  const handleMouseLeave = () => {
+    x.set(0)
+    y.set(0)
+    setIsHovered(false)
+  }
+
   return (
     <div id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Gradient Background - Ferrari Red */}
@@ -24,41 +59,113 @@ export default function Hero() {
         />
       </div>
 
-      {/* Content - Centered text only */}
+      {/* Content - Centered text only with staggered animations */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8, delay: 0.3 }}
         className="relative z-10 text-center px-4 max-w-5xl mx-auto pt-20"
       >
         <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-serif uppercase leading-[1.1] text-black"
+          className="text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-serif uppercase leading-[1.1] text-black mb-12"
           style={{ letterSpacing: '0.01em', fontWeight: 400 }}
         >
-          WE'RE BUILDING THE MEME
-          <br />
-          PLATFORM WE WISH WE HAD WHEN
-          <br />
-          WE WERE STARTING OUT.
+          {['Interested in this premium domain?'].map((line, index) => (
+            <motion.span
+              key={index}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.8,
+                delay: 0.5 + index * 0.2,
+                ease: [0.25, 0.46, 0.45, 0.94] // Custom easing for smooth reveal
+              }}
+              className="block"
+            >
+              {line.split(' ').map((word, wordIndex) => (
+                <motion.span
+                  key={wordIndex}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    duration: 0.6,
+                    delay: 0.5 + index * 0.2 + wordIndex * 0.05,
+                    ease: "easeOut"
+                  }}
+                  className="inline-block mr-2"
+                >
+                  {word}
+                </motion.span>
+              ))}
+            </motion.span>
+          ))}
         </motion.h1>
+
+        {/* Modern Animated Contact Button */}
+        <motion.a
+          ref={buttonRef}
+          href="mailto:admin@memeworld.com"
+          initial={{ opacity: 0, y: 30, scale: 0.9 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{
+            duration: 0.8,
+            delay: 1.2,
+            ease: [0.25, 0.46, 0.45, 0.94]
+          }}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
+          onMouseEnter={() => setIsHovered(true)}
+          style={{
+            x: xSpring,
+            y: ySpring,
+            rotateX,
+            rotateY,
+            transformStyle: 'preserve-3d',
+          }}
+          className="relative inline-block group"
+        >
+          {/* Button Background with Gradient */}
+          <motion.div
+            className="relative px-12 py-5 bg-black text-white font-serif uppercase tracking-wider text-lg md:text-xl overflow-hidden"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.98 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+          >
+            {/* Shimmer Effect */}
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+              initial={{ x: '-100%' }}
+              animate={isHovered ? { x: '200%' } : { x: '-100%' }}
+              transition={{ duration: 0.6, ease: 'easeInOut' }}
+            />
+            
+            {/* Button Text */}
+            <span className="relative z-10">CONTACT US</span>
+            
+            {/* Glow Effect */}
+            <motion.div
+              className="absolute inset-0 opacity-0 group-hover:opacity-100 blur-xl"
+              style={{
+                background: 'radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%)',
+              }}
+              transition={{ duration: 0.3 }}
+            />
+          </motion.div>
+          
+          {/* Animated Border */}
+          <motion.div
+            className="absolute inset-0 border-2 border-black"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.4, duration: 0.5 }}
+            whileHover={{
+              borderColor: 'rgba(255, 255, 255, 0.5)',
+              boxShadow: '0 0 20px rgba(255, 255, 255, 0.3)',
+            }}
+          />
+        </motion.a>
       </motion.div>
 
-      {/* Footer Text - Fixed at bottom */}
-      <div className="absolute bottom-6 md:bottom-8 left-0 right-0 z-10">
-        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-xs md:text-sm font-serif uppercase tracking-wide text-black">
-            A CREATOR-LED MEME PLATFORM
-          </p>
-          <div className="flex gap-4 md:gap-6 text-xs md:text-sm font-serif uppercase tracking-wide text-black">
-            <a href="#portfolio" className="hover:opacity-70 transition-opacity">PORTFOLIO</a>
-            <a href="#team" className="hover:opacity-70 transition-opacity">TEAM</a>
-            <a href="#about" className="hover:opacity-70 transition-opacity">ABOUT</a>
-          </div>
-        </div>
-      </div>
     </div>
   )
 }
