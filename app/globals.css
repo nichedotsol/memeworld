@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-white text-black;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* Serif font for hero text and taglines */
+.font-serif {
+  font-family: Georgia, 'Times New Roman', serif;
+}

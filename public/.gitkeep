@@ -1,0 +1,17 @@
+# LOGO INSTRUCTIONS
+# =================
+# 
+# Place your logo file in this directory (public/)
+# 
+# Supported formats: .png, .svg, .jpg, .jpeg, .webp
+# 
+# Name your file one of these:
+#   - logo.png (recommended)
+#   - logo.svg
+#   - logo.jpg
+#   - logo.webp
+#
+# The Logo component will automatically use it once you place it here.
+# 
+# If your logo has a different name, update the `logoSrc` variable in:
+#   app/components/Logo.tsx
